@@ -7,7 +7,9 @@ import (
 )
 
 func main() {
-	mux := route.GetRouter()
+	router := route.Router{Mutex: http.NewServeMux()}
+	router.GetRouter()
+	router.GetAuthRouter()
 	// corsについて https://maku77.github.io/p/goruwy4/
 	corsOrigin := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000", "https://maku77.github.io"},
@@ -17,7 +19,7 @@ func main() {
 	})
 	////全てを許可する Access-Control-Allow-Origin: *
 	//corsOrigin := cors.Default()
-	handler := corsOrigin.Handler(mux)
+	handler := corsOrigin.Handler(router.Mutex)
 	if err := http.ListenAndServe(":8080", handler); err != nil {
 		panic(err)
 	}

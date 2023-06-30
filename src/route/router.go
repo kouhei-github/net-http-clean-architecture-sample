@@ -8,15 +8,17 @@ import (
 	"net/http"
 )
 
-func GetRouter() *http.ServeMux {
-	mux := http.NewServeMux()
+type Router struct {
+	Mutex *http.ServeMux
+}
+
+func (router *Router) GetRouter() {
+
 	// 練習
-	mux.HandleFunc("/", controller.Handler)
-	mux.HandleFunc("/two", controller.HandlerTwo)
+	router.Mutex.HandleFunc("/", controller.Handler)
+	router.Mutex.HandleFunc("/two", controller.HandlerTwo)
 
 	// ユーザー登録
 	signup := auth_handle.NewSignupHandler(&auth_usecase.Signup{AdminUserRepo: &repository.Administer{}})
-	mux.HandleFunc("/api/v1/signup", signup.SignupHandler)
-
-	return mux
+	router.Mutex.HandleFunc("/api/v1/signup", signup.SignupHandler)
 }
